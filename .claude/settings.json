@@ -1,0 +1,10 @@
+{
+    "hooks": {
+        "Stop": [
+        {
+            "command": "pytest tests/ -q",
+            "type": "command"
+        }
+    ]
+    }
+}
