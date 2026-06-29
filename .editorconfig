@@ -1,0 +1,32 @@
+root = true
+
+# 全局默认
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Python
+[*.py]
+indent_size = 4
+max_line_length = 88
+
+# Web & 配置文件（2格缩进）
+[*.{js,ts,jsx,tsx,css,scss,html,json,yaml,yml,toml}]
+indent_size = 2
+
+# Markdown（保留行尾空格，两个空格是换行语法）
+[*.md]
+trim_trailing_whitespace = false
+indent_size = 2
+
+# Makefile 必须用 tab
+[Makefile]
+indent_style = tab
+
+# Shell
+[*.{sh,bash,zsh}]
+indent_size = 2

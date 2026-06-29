@@ -1,0 +1,96 @@
+# 密钥 & 凭据
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+credentials.json
+service-account.json
+google-services.json
+*-key.json
+*_key.json
+
+# 依赖目录
+node_modules/
+.venv/
+venv/
+env/
+__pypackages__/
+
+# 构建产物
+dist/
+build/
+out/
+target/
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.next/
+
+# 锁文件
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+poetry.lock
+Pipfile.lock
+
+# 测试 & 覆盖率
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+__snapshots__/
+.nyc_output/
+
+# 日志 & 临时文件
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# 数据库
+*.sqlite
+*.sqlite3
+*.db
+dump.sql
+
+# 二进制 & 媒体
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.mp4
+*.mov
+*.mp3
+*.wav
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+
+# IDE & 系统文件
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+.git/
+
+# 工具缓存
+.cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# AI 工具
+.claude/sessions/
+.codex/log/
