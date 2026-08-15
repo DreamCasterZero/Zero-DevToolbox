@@ -1,0 +1,596 @@
+
+\documentclass[12pt,a4paper]{article}
+
+% ============================================================
+% 中文技术文档模板
+% 建议在 Overleaf 中使用 XeLaTeX 编译
+% ============================================================
+
+\usepackage[UTF8]{ctex}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{setspace}
+\usepackage{url}
+\usepackage{hyperref}
+
+\tcbuselibrary{skins,breakable}
+
+% ============================================================
+% 页面设置
+% ============================================================
+
+\geometry{
+    a4paper,
+    left=2.5cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm
+}
+
+\onehalfspacing
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.3em}
+\setlength{\emergencystretch}{2em}
+
+\setlist[itemize]{
+    itemsep=0.2em,
+    topsep=0.4em
+}
+
+\setlist[enumerate]{
+    itemsep=0.2em,
+    topsep=0.4em
+}
+
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+
+% ============================================================
+% 文档信息占位符
+% ============================================================
+
+\newcommand{\doctitle}{Zero-DevToolbox 技术文档}
+\newcommand{\docsubtitle}{通用、低耦合、跨项目复用的 AI 辅助开发 Skill 参考}
+\newcommand{\projectname}{Zero-DevToolbox}
+\newcommand{\docauthor}{项目组}
+\newcommand{\docversion}{v1.0}
+\newcommand{\docdescription}{本文档说明 Zero-DevToolbox 的项目定位、Skill 架构、主要工作流、安装方式、知识库机制、配套配置与已知限制。}
+
+% ============================================================
+% 颜色
+% ============================================================
+
+\definecolor{primaryblue}{RGB}{35,85,145}
+\definecolor{secondaryblue}{RGB}{65,105,170}
+\definecolor{codebg}{RGB}{247,248,250}
+\definecolor{codeframe}{RGB}{205,210,218}
+\definecolor{codegreen}{RGB}{40,130,80}
+\definecolor{codegray}{RGB}{110,115,125}
+\definecolor{codepurple}{RGB}{145,70,165}
+\definecolor{warningorange}{RGB}{210,125,30}
+\definecolor{softgray}{RGB}{245,245,245}
+
+% ============================================================
+% 页眉页脚
+% ============================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\doctitle}
+\fancyhead[R]{\small\leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ============================================================
+% 标题格式
+% ============================================================
+
+\titleformat{\section}
+    {\Large\bfseries\color{primaryblue}}
+    {\thesection}
+    {1em}
+    {}
+    [\titlerule]
+
+\titleformat{\subsection}
+    {\large\bfseries\color{secondaryblue}}
+    {\thesubsection}
+    {1em}
+    {}
+
+\titleformat{\subsubsection}
+    {\normalsize\bfseries}
+    {\thesubsubsection}
+    {1em}
+    {}
+
+% ============================================================
+% 表格
+% ============================================================
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+% ============================================================
+% 代码样式
+% ============================================================
+
+\lstdefinestyle{codestyle}{
+    backgroundcolor=\color{codebg},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{primaryblue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{codeframe},
+    columns=fullflexible
+}
+
+\lstdefinestyle{commandstyle}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{codeframe},
+    numbers=none,
+    columns=fullflexible
+}
+
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily\footnotesize,
+    string=[s]{}{},
+    stringstyle=\color{codepurple},
+    comment=[l]{//},
+    commentstyle=\color{codegreen},
+    keywords={true,false,null},
+    keywordstyle=\color{primaryblue}\bfseries
+}
+
+\lstset{style=codestyle}
+
+% ============================================================
+% 信息框
+% ============================================================
+
+\newtcolorbox{infobox}[2][]{
+    enhanced,
+    breakable,
+    colback=blue!4!white,
+    colframe=primaryblue,
+    fonttitle=\bfseries,
+    title={#2},
+    #1
+}
+
+\newtcolorbox{warningbox}[2][]{
+    enhanced,
+    breakable,
+    colback=orange!5!white,
+    colframe=warningorange,
+    fonttitle=\bfseries,
+    title={#2},
+    #1
+}
+
+\newtcolorbox{filebox}[2][]{
+    enhanced,
+    breakable,
+    colback=softgray,
+    colframe=gray!65!black,
+    fonttitle=\bfseries\ttfamily,
+    title={文件：#2},
+    #1
+}
+
+\newtcolorbox{functionbox}[2][]{
+    enhanced,
+    breakable,
+    colback=blue!2!white,
+    colframe=secondaryblue,
+    fonttitle=\bfseries\ttfamily,
+    title={函数：#2},
+    #1
+}
+
+\newtcolorbox{qabox}[2][]{
+    enhanced,
+    breakable,
+    colback=blue!4!white,
+    colframe=primaryblue,
+    fonttitle=\bfseries,
+    title={问题：#2},
+    #1
+}
+
+\newtcolorbox{answerbox}[1][]{
+    enhanced,
+    breakable,
+    colback=green!4!white,
+    colframe=green!55!black,
+    leftrule=4pt,
+    #1
+}
+
+% ============================================================
+% 行内代码
+% ============================================================
+
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+
+% ============================================================
+% 超链接
+% ============================================================
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    urlcolor=primaryblue,
+    citecolor=green!50!black,
+    bookmarks=true,
+    bookmarksnumbered=true,
+    pdftitle={\doctitle},
+    pdfauthor={\docauthor}
+}
+
+% ============================================================
+% 文档正文
+% ============================================================
+
+\begin{document}
+
+% ============================================================
+% 封面
+% ============================================================
+
+\begin{titlepage}
+    \centering
+    \vspace*{2.8cm}
+
+    {\Huge\bfseries\color{primaryblue}\doctitle\par}
+
+    \vspace{0.7cm}
+
+    {\Large\docsubtitle\par}
+
+    \vspace{2cm}
+
+    \rule{\linewidth}{0.6mm}
+
+    \vspace{1cm}
+
+    \begin{tabular}{rl}
+        \textbf{项目或主题：} & \projectname \\[0.6em]
+        \textbf{作者：} & \docauthor \\[0.6em]
+        \textbf{日期：} & \today \\[0.6em]
+        \textbf{版本：} & \docversion
+    \end{tabular}
+
+    \vspace{1cm}
+
+    \rule{\linewidth}{0.6mm}
+
+    \vfill
+
+    \begin{minipage}{0.85\textwidth}
+        \centering
+        \small
+        \docdescription
+    \end{minipage}
+\end{titlepage}
+
+% ============================================================
+% 目录
+% ============================================================
+
+\tableofcontents
+\newpage
+
+% ============================================================
+% 正文占位符
+% ============================================================
+
+
+\section{文档概述}
+
+本文档面向 Zero-DevToolbox 的使用者与维护者，基于当前工作树中的 README、Skill 定义、元数据、模板、Cursor 规则、ignore 模板、EditorConfig、许可证及 Git 信息整理。分析范围采用默认的 \code{scope=core}，重点描述对外可复用的工作流、配置结构和使用路径。
+
+\begin{infobox}{范围说明}
+Zero-DevToolbox 是配置与文档资源仓库，不包含传统应用程序入口、业务类、运行时服务或公共 API。因此本文不虚构类图、函数签名、数据库结构、性能指标或部署流程，而是将 Skill 目录视为主要功能模块。
+\end{infobox}
+
+\section{项目简介}
+
+Zero-DevToolbox 是一套简洁、通用、低耦合、可跨项目复用的 AI 辅助开发 Skill 集合。与绑定单一项目架构、框架或业务规则的 Skill 不同，本仓库提供可迁移的工作流定义；Skill 在执行时读取目标项目的代码、配置、测试、\code{AGENTS.md} 和文档，再确定具体操作。
+
+当前仓库包含 9 个需要显式调用的工作流 Skill，主要解决以下开发问题：
+
+\begin{itemize}
+    \item 代码注释不足、局部实现复杂以及重复代码逐渐累积；
+    \item 功能调用链、数据流、状态变化、单位和坐标系难以快速理解；
+    \item README 与真实代码或配置长期不同步；
+    \item Git 提交、提交信息生成和推送过程重复；
+    \item Codex 跨会话后容易丢失项目背景、决策、问题和进度；
+    \item 零散笔记或代码库知识缺少结构化技术文档。
+\end{itemize}
+
+\subsection{设计目标}
+
+\begin{itemize}
+    \item \textbf{低耦合：}不写死目标项目的模块、框架、数据模型或业务逻辑。
+    \item \textbf{可迁移：}可以复制整套 \code{.agents/skills/}，也可以只复制单个 Skill 目录。
+    \item \textbf{职责单一：}每个 Skill 聚焦一个明确工作流，并通过显式调用启动。
+    \item \textbf{安全可验证：}Skill 定义中包含范围控制、已有改动保护和结果验证规则。
+    \item \textbf{上下文连续：}通过结构化、可版本管理的项目知识库保存长期有效信息。
+\end{itemize}
+
+\section{技术栈与运行环境}
+
+\begin{longtable}{p{0.23\textwidth}p{0.67\textwidth}}
+\toprule
+\textbf{组成} & \textbf{用途} \\
+\midrule
+Markdown & 保存 Skill 主指令、README 和工作流参考文档。 \\
+YAML & \code{agents/openai.yaml} 保存显示名称、默认提示词和调用策略。 \\
+LaTeX & 提供可直接上传 Overleaf 的中文技术文档模板。 \\
+Cursor MDC & \code{.cursor/rules/karpathy-guidelines.mdc} 保存始终应用的编码行为规则。 \\
+EditorConfig & 统一字符编码、换行、缩进和行尾空格行为。 \\
+Git & 获取仓库状态，也是 \texttt{\$commit} 工作流的基础。 \\
+\bottomrule
+\end{longtable}
+
+仓库自身没有包管理器、运行时依赖清单、编译脚本或自动测试入口。使用 Skill 需要一个能够从 \code{.agents/skills/} 发现项目级 Skill 的 AI 编码工具。生成的 LaTeX 文档默认面向 Overleaf 的 XeLaTeX 编译器。
+
+\section{目录结构}
+
+\begin{lstlisting}[style=commandstyle]
+Zero-DevToolbox/
+|-- .agents/
+|   `-- skills/
+|       |-- add-code-comments/
+|       |-- commit/
+|       |-- generate-latex-document/
+|       |   |-- agents/openai.yaml
+|       |   |-- assets/document-template.tex
+|       |   |-- references/codebase-workflow.md
+|       |   |-- references/notes-workflow.md
+|       |   `-- SKILL.md
+|       |-- init-project-knowledge/
+|       |-- optimize-target-code/
+|       |-- readme/
+|       |-- reduce-code-redundancy/
+|       |-- trace-code-flow/
+|       `-- update-project-knowledge/
+|-- .cursor/rules/karpathy-guidelines.mdc
+|-- ignore/
+|   |-- .gitignore
+|   |-- .claudeignore
+|   `-- .cursorignore
+|-- .editorconfig
+|-- LICENSE
+|-- README.md
+`-- README_zh.md
+\end{lstlisting}
+
+除 \code{generate-latex-document} 外，当前各 Skill 的核心结构是 \code{SKILL.md} 与 \code{agents/openai.yaml}。\code{generate-latex-document} 额外包含模板以及笔记整理、代码库说明两套工作流参考。
+
+\section{总体架构}
+
+\subsection{分层组成}
+
+\begin{enumerate}
+    \item \textbf{发现与交互层：}\code{agents/openai.yaml} 提供显示名称、简短说明和默认提示词；所有现有 Skill 都设置 \code{allow_implicit_invocation: false}。
+    \item \textbf{工作流定义层：}\code{SKILL.md} 描述适用场景、执行步骤、范围边界、安全规则和完成报告。
+    \item \textbf{可选资源层：}复杂 Skill 可以通过 \code{references/} 拆分专项工作流，通过 \code{assets/} 保存可复用模板。
+    \item \textbf{目标项目层：}Skill 被复制到目标仓库后，根据该项目的真实代码、配置、测试、Git 状态和文档执行。
+    \item \textbf{配套规则层：}Cursor 规则、ignore 模板和 EditorConfig 为编码行为、上下文过滤和格式统一提供补充支持。
+\end{enumerate}
+
+\subsection{典型执行流程}
+
+\begin{enumerate}
+    \item 将完整 Skill 集合或选定目录复制到目标项目的 \code{.agents/skills/}。
+    \item 在 AI 编码会话中使用 \texttt{\$skill-name} 显式调用所需工作流。
+    \item Skill 读取目标项目适用的 \code{AGENTS.md}、相关代码、配置、测试和文档。
+    \item Skill 确定处理范围，并避开第三方依赖、生成文件、缓存、日志和无关模块。
+    \item 根据用户要求执行只读分析或小范围修改。
+    \item 运行与风险相称的检查，并报告已验证结果、未验证内容及原有工作区改动。
+\end{enumerate}
+
+\begin{warningbox}{显式调用}
+现有 9 个 Skill 均禁用隐式调用。自然语言任务不会自动授权这些工作流；使用者需要明确写出对应的 \texttt{\$skill-name}。
+\end{warningbox}
+
+\section{Skill 模块参考}
+
+\begin{longtable}{p{0.27\textwidth}p{0.63\textwidth}}
+\toprule
+\textbf{Skill} & \textbf{核心职责} \\
+\midrule
+\texttt{\$add-code-comments} & 为用户指定的代码补充简洁、准确的变量和函数注释，并整理局部多余空行；只允许修改注释和空白格式，主要适用于支持 \code{//} 注释的语言。 \\
+\texttt{\$commit} & 检查 Git 工作区、暂存区、分支和远端，生成符合仓库风格的提交信息，并完成暂存、提交和推送。 \\
+\texttt{\$generate-latex-document} & 使用内置模板，将零散资料整理为技术文档，或分析代码库生成结构化说明；只输出独立的 \code{.tex} 文件。 \\
+\texttt{\$init-project-knowledge} & 首次分析现有项目，创建或完善 \code{AGENTS.md} 和结构化项目知识库，并使用真实代码与资料进行初步填充。 \\
+\texttt{\$optimize-target-code} & 优化指定函数、类、文件或小范围功能，关注效率、复杂度、数值稳定性、健壮性和可读性，并保持外部行为。 \\
+\texttt{\$readme} & 根据真实代码、配置、脚本和文档，同步创建、检查或更新英文 \code{README.md} 与中文 \code{README_zh.md}。 \\
+\texttt{\$reduce-code-redundancy} & 审计重复实现、未使用代码、冗余文件和分散工具；只清理证据充分且能够验证的候选项。 \\
+\texttt{\$trace-code-flow} & 只读追踪指定功能从入口到输出的调用链、数据流、状态变化、外部交互、单位和坐标系。 \\
+\texttt{\$update-project-knowledge} & 检查已完成工作，仅在产生经过确认且长期有效的信息时更新已有项目知识库。 \\
+\bottomrule
+\end{longtable}
+
+\subsection{代码维护类工作流}
+
+\texttt{\$add-code-comments}、\texttt{\$optimize-target-code} 和 \texttt{\$reduce-code-redundancy} 共同覆盖可读性、局部实现质量与仓库级冗余治理。它们都强调限定范围、保留外部行为、避免顺带重构，并保护执行前已经存在的用户改动。
+
+冗余清理支持 \code{mode=audit}（只分析）、\code{mode=apply}（清理已确认候选项）以及默认的“先审计、后确认”模式。
+
+\subsection{理解与文档类工作流}
+
+\texttt{\$trace-code-flow} 用于建立从入口到输出的代码理解，重点区分接口、实现、调用者、动态路径、状态、副作用和数值约定。\texttt{\$readme} 将项目事实同步到中英文入口文档。\texttt{\$generate-latex-document} 则将笔记或代码库整理成适合交付的技术文档。
+
+\subsection{Git 交付工作流}
+
+\texttt{\$commit} 会检查未暂存与已暂存差异、近期提交风格、当前分支和远端信息。其目标是根据实际 diff 生成提交信息，并安全完成提交和推送，而不是盲目提交整个工作区。
+
+\section{项目知识库与上下文连续性}
+
+\subsection{初始化}
+
+\texttt{\$init-project-knowledge} 面向首次建立知识库的场景。它会检查现有 \code{AGENTS.md}、文档索引和已有知识文档，优先复用现有结构；缺少明确约定时，默认使用项目根目录下的 \code{docs/}。
+
+知识库可以包含项目概览、架构、接口、技术决策、问题记录和当前进度。其目标是形成轻量、结构化、可版本管理、适合 Codex 长期使用的项目上下文。
+
+\subsection{日常更新}
+
+\texttt{\$update-project-knowledge} 只更新已有知识库，不擅自创建新结构。它根据当前任务、Git 差异和验证结果，记录以后仍然有用的确认信息；普通聊天、临时想法、未验证猜测和冗长日志不会写入。
+
+\subsection{解决的问题}
+
+这两个 Skill 形成“首次建立、按需维护”的生命周期，减少跨会话时项目目标、架构、接口、决策、已知问题和进度信息的丢失。这里的“知识库”是保存在项目文档中的版本化知识集合，不是数据库服务，也不引入额外运行时依赖。
+
+\section{LaTeX 文档生成模块}
+
+\subsection{工作模式}
+
+\begin{itemize}
+    \item \textbf{笔记整理模式：}处理 Markdown、TXT、会议记录、学习笔记及其他零散资料。
+    \item \textbf{代码库说明模式：}分析项目入口、核心模块、公共接口、配置、测试和主要流程。
+\end{itemize}
+
+两种模式分别读取 \code{references/notes-workflow.md} 和 \code{references/codebase-workflow.md}。除非用户明确要求混合生成，否则一次只使用一个工作流。
+
+\subsection{模板与输出}
+
+\code{assets/document-template.tex} 提供 A4 页面、中文排版、页眉页脚、目录、代码块、表格和信息框样式。生成结果需要替换标题、副标题、项目名、作者、版本、封面说明和正文占位符，输出为不依赖 Skill 目录的完整 \code{.tex} 文件。
+
+工作流不调用本地 LaTeX、XeLaTeX 或 \code{latexmk}，也不生成 PDF。结果默认上传 Overleaf 后使用 XeLaTeX 编译。
+
+\section{安装与使用}
+
+\subsection{克隆仓库}
+
+\begin{lstlisting}[style=commandstyle]
+git clone https://github.com/DreamCasterZero/Zero-DevToolbox.git
+\end{lstlisting}
+
+\subsection{复制全部 Skill}
+
+macOS 或 Linux：
+
+\begin{lstlisting}[style=commandstyle]
+mkdir -p /path/to/your-project/.agents
+cp -R Zero-DevToolbox/.agents/skills /path/to/your-project/.agents/
+\end{lstlisting}
+
+PowerShell：
+
+\begin{lstlisting}[style=commandstyle]
+New-Item -ItemType Directory -Force C:\path\to\your-project\.agents
+Copy-Item -Recurse Zero-DevToolbox\.agents\skills C:\path\to\your-project\.agents\
+\end{lstlisting}
+
+\subsection{调用示例}
+
+\begin{lstlisting}[style=commandstyle]
+$trace-code-flow trace the checkout flow from entry to output.
+$reduce-code-redundancy mode=audit
+$init-project-knowledge analyze this repository and build its knowledge base.
+$readme synchronize the English and Chinese READMEs.
+\end{lstlisting}
+
+\section{配套配置}
+
+\subsection{Cursor 行为规则}
+
+\code{.cursor/rules/karpathy-guidelines.mdc} 设置为 \code{alwaysApply: true}，要求编码前明确假设与权衡、优先使用最简单方案、只进行必要修改，以及用可验证目标驱动执行。
+
+\subsection{Ignore 模板}
+
+\code{ignore/} 提供 \code{.gitignore}、\code{.claudeignore} 和 \code{.cursorignore}。规则覆盖密钥、依赖目录、构建和测试产物、日志、临时文件、数据库、媒体、IDE 元数据及工具缓存。
+
+\begin{warningbox}{复制前检查}
+默认 ignore 模板会排除锁文件和图片等内容，而部分项目应提交这些文件。复制后需要根据目标项目的版本控制策略检查并调整。
+\end{warningbox}
+
+\subsection{EditorConfig}
+
+\code{.editorconfig} 使用 UTF-8 和 LF，要求文件末尾换行，并为 Python、Web 与配置文件、Markdown、Makefile 和 Shell 脚本定义缩进及行尾空格策略。
+
+\section{构建、运行与测试}
+
+Zero-DevToolbox 不包含可执行应用、包管理配置或自动测试脚本，因此不存在仓库级依赖安装、构建、启动和测试命令。文档中的复制命令来自当前 README；本次生成没有实际复制到其他项目，也没有执行网络克隆。
+
+生成的本文档应上传 Overleaf，并选择 XeLaTeX 编译器。按照 Skill 约束，本次没有检查本地 LaTeX 环境，也没有执行编译或生成 PDF。
+
+\section{常见问题}
+
+\begin{qabox}{可以只复制一个 Skill 吗？}
+\end{qabox}
+\begin{answerbox}
+可以。每个 Skill 位于独立目录；复制时应保留其中的 \code{SKILL.md}、\code{agents/openai.yaml} 以及该 Skill 自带的 \code{assets/} 或 \code{references/}。
+\end{answerbox}
+
+\begin{qabox}{为什么 Skill 不会自动触发？}
+\end{qabox}
+\begin{answerbox}
+当前所有 \code{agents/openai.yaml} 都设置 \code{allow_implicit_invocation: false}，使分析、修改、提交和知识库维护等工作流只能在用户明确授权后执行。
+\end{answerbox}
+
+\begin{qabox}{项目知识库是不是数据库？}
+\end{qabox}
+\begin{answerbox}
+不是。它是由 \code{AGENTS.md}、文档索引及结构化 Markdown 文档组成的版本化知识集合，用于保存长期有效的项目上下文。
+\end{answerbox}
+
+\begin{qabox}{为什么没有类与函数参考？}
+\end{qabox}
+\begin{answerbox}
+当前仓库以 Markdown、YAML、MDC 和 LaTeX 资源为主，不包含传统业务源码、类或公共函数，因此本文按 Skill 模块和工作流进行说明。
+\end{answerbox}
+
+\section{已知限制}
+
+\begin{itemize}
+    \item 实际可用性取决于宿主 AI 编码工具是否支持从 \code{.agents/skills/} 发现项目级 Skill。
+    \item \texttt{\$add-code-comments} 主要面向支持 \code{//} 注释的语言。
+    \item \texttt{\$generate-latex-document} 只生成 \code{.tex}，不负责本地编译、PDF 生成或 Overleaf 上传。
+    \item 仓库没有自动化测试来验证 Skill 在不同宿主工具、操作系统和目标项目中的行为。
+    \item 当前工作树包含尚未提交的配置迁移和 README 修改；本文描述当前文件状态，而不是最近一次提交的完整快照。
+\end{itemize}
+
+\section{许可证与来源}
+
+项目采用 MIT License，版权信息为 Copyright (c) 2026 DreamCasterZero。远端仓库地址为：
+
+\begin{center}
+\url{https://github.com/DreamCasterZero/Zero-DevToolbox}
+\end{center}
+
+本文内容依据当前仓库文件生成，未使用外部资料，也未推断未获支持的版本、性能或兼容性结论。
+
+
+\end{document}
