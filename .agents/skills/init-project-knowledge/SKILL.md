@@ -46,4 +46,3 @@ description: "首次分析现有项目，创建或完善 AGENTS.md 和结构化�
 
 ```text
 docs/project-knowledge/
-```

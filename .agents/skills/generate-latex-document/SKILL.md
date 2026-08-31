@@ -67,4 +67,3 @@ description: "使用内置 LaTeX 模板，将 Markdown、TXT 等零散资料整�
 
 ```text
 %  _  &  #  $  {  }  ~  ^  \
-```

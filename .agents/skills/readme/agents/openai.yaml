@@ -1,7 +1,7 @@
 interface:
-  display_name: "维护中英文 README"
-  short_description: "根据项目真实内容同步创建或更新中英文 README"
-  default_prompt: "使用 $readme 根据当前项目的真实代码和配置，同步创建或更新英文 README.md 与中文 README_zh.md。"
+  display_name: "维护项目 README"
+  short_description: "依据真实代码和配置创建、审查或更新准确可执行的README"
+  default_prompt: "使用 $readme 检查当前项目，并根据真实代码和配置创建或更新 README。"
 
 policy:
   allow_implicit_invocation: false

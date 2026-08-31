@@ -31,5 +31,4 @@ git diff
 git diff --cached
 git log --oneline -8
 git branch --show-current
-git remote -v
-```
+git remote -v   
